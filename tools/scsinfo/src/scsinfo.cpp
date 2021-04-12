@@ -41,7 +41,6 @@ int main(int argc, char **argv)
         {
             std::cout << "Hash: " << entry->get_hash() << std::endl;
             std::cout << "Offset: " << entry->get_offset() << std::endl;
-            std::cout << "Unknown1: " << entry->get_unknown1() << std::endl;
             std::cout << "Type: " << SCS::to_string(entry->get_type()) << std::endl;
             std::cout << "CRC: " << entry->get_crc() << std::endl;
             std::cout << "Size: " << entry->get_size() << " bytes" << std::endl;

@@ -70,16 +70,14 @@ namespace SCS
     void SCSFile::read(Entry* &entry)
     {
         uint64_t hash;
-        int32_t offset;
-        int32_t unknown1;
-        int32_t type;
+        uint64_t offset;
+        uint32_t type;
         uint32_t crc;
-        int32_t size;
-        int32_t compressed_size;
+        uint32_t size;
+        uint32_t compressed_size;
 
         read(hash);
         read(offset);
-        read(unknown1);
         read(type);
         read(crc);
         read(size);
@@ -89,7 +87,6 @@ namespace SCS
 
         entry->set_hash(hash);
         entry->set_offset(offset);
-        entry->set_unknown1(unknown1);
         entry->set_type(static_cast<EntryType>(type));
         entry->set_crc(crc);
         entry->set_size(size);
@@ -234,7 +231,9 @@ namespace SCS
             is_recursive = name[0] == '*';
             entry_name = (is_recursive) ? name.substr(1) : name;
             path = (!entry->get_path().empty()) ? entry->get_path() + "/" + entry_name : entry_name;
-            hash = CityHash64(path.c_str(), path.size());
+            hash = CityHash64(path.c_str(), path.length());
+
+            std::cout << "Debug: " << path << " - " << hash << std::endl;
 
             next = find(path);
             if(next == nullptr)
@@ -245,7 +244,7 @@ namespace SCS
 
             next->set_path(path);
 
-            std::cout << path << std::endl;
+            std::cout << "Path: " << path << std::endl;
 
             if(is_recursive)
                 populateDirectory(next);

@@ -17,24 +17,14 @@ namespace SCS
         return m_hash;
     }
 
-    void Entry::set_offset(int32_t offset)
+    void Entry::set_offset(uint64_t offset)
     {
         m_offset = offset;
     }
 
-    int32_t Entry::get_offset()
+    uint64_t Entry::get_offset()
     {
         return m_offset;
-    }
-    
-    void Entry::set_unknown1(int32_t unknown1)
-    {
-        m_unknown1 = unknown1;
-    }
-    
-    int32_t Entry::get_unknown1()
-    {
-        return m_unknown1;
     }
 
     void Entry::set_type(EntryType type)
@@ -57,22 +47,22 @@ namespace SCS
         return m_crc;
     }
     
-    void Entry::set_size(int32_t size)
+    void Entry::set_size(uint32_t size)
     {
         m_size = size;
     }
     
-    int32_t Entry::get_size()
+    uint32_t Entry::get_size()
     {
         return m_size;
     }
     
-    void Entry::set_compressed_size(int32_t compressed_size)
+    void Entry::set_compressed_size(uint32_t compressed_size)
     {
         m_compressed_size = compressed_size;
     }
     
-    int32_t Entry::get_compressed_size()
+    uint32_t Entry::get_compressed_size()
     {
         return m_compressed_size;
     }

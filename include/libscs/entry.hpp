@@ -41,7 +41,7 @@ namespace SCS
             case CompressedNamesCopy:
                 return "CompressedNamesCopy";
             default:
-                return "Unknown";
+                return "Unknown (" + std::to_string(type) + ")";
         }
     }
 
@@ -53,18 +53,16 @@ namespace SCS
 
         void set_hash(uint64_t hash);
         uint64_t get_hash();
-        void set_offset(int32_t offset);
-        int32_t get_offset();
-        void set_unknown1(int32_t unknown1);
-        int32_t get_unknown1();
+        void set_offset(uint64_t offset);
+        uint64_t get_offset();
         void set_type(EntryType type);
         EntryType get_type();
         void set_crc(uint32_t crc);
         uint32_t get_crc();
-        void set_size(int32_t size);
-        int32_t get_size();
-        void set_compressed_size(int32_t compressed_size);
-        int32_t get_compressed_size();
+        void set_size(uint32_t size);
+        uint32_t get_size();
+        void set_compressed_size(uint32_t compressed_size);
+        uint32_t get_compressed_size();
         std::vector<std::string> &get_names();
         bool is_file();
         bool is_directory();
@@ -78,12 +76,11 @@ namespace SCS
         std::string get_path();
     private:
         uint64_t m_hash;
-        int32_t m_offset;
-        int32_t m_unknown1;
+        uint64_t m_offset;
         EntryType m_type;
         uint32_t m_crc;
-        int32_t m_size;
-        int32_t m_compressed_size;
+        uint32_t m_size;
+        uint32_t m_compressed_size;
         std::vector<std::string> m_names;
         bool m_root_path;
         bool m_locale_root_path;
