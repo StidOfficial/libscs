@@ -1,5 +1,7 @@
 #include "entry.hpp"
 
+#include "scs.hpp"
+
 namespace SCS
 {
     Entry::Entry()
@@ -107,7 +109,7 @@ namespace SCS
 
     bool Entry::is_root_directory()
     {
-        return get_hash() == ROOT_HASH;
+        return get_hash() == SCSFile::root_path_hash;
     }
 
     void Entry::set_root_path(bool root_path)

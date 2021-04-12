@@ -41,6 +41,11 @@ namespace SCS
     class SCSFile : public std::vector<std::shared_ptr<Entry>>
     {
     public:
+        static inline std::string locale_root_path = "locale";
+        static inline const uint64_t locale_root_path_hash = CityHash64(locale_root_path.c_str(), locale_root_path.length());
+        static inline std::string root_path = "";
+        static inline const uint64_t root_path_hash = CityHash64(root_path.c_str(), root_path.length());
+
         SCSFile(std::filesystem::path file_path);
         SCSFile();
         ~SCSFile();
@@ -63,9 +68,6 @@ namespace SCS
         uint32_t m_hash_method;
         uint32_t m_num_entries;
         uint32_t m_start_offset;
-
-        uint64_t m_locale_root_path_hash;
-        uint64_t m_root_path_hash;
 
         void open(std::filesystem::path file_path);
         void read(uint16_t &value);

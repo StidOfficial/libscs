@@ -17,11 +17,6 @@ namespace SCS
     SCSFile::SCSFile()
         : std::vector<std::shared_ptr<Entry>>(), m_file()
     {
-        std::string locale = "locale";
-        std::string root = "";
-
-        m_locale_root_path_hash = CityHash64(locale.c_str(), locale.size());
-        m_root_path_hash = CityHash64(root.c_str(), root.size());
     }
 
     void SCSFile::open(std::filesystem::path file_path)
@@ -119,12 +114,12 @@ namespace SCS
 
     Entry *SCSFile::get_root()
     {
-        return find(m_root_path_hash);
+        return find(root_path_hash);
     }
 
     Entry *SCSFile::get_locale_root()
     {
-        return find(m_locale_root_path_hash);
+        return find(locale_root_path_hash);
     }
 
     void SCSFile::unpack()
@@ -200,8 +195,8 @@ namespace SCS
                     entry->get_names().emplace_back(name);
             }
 
-            entry->set_root_path(entry->get_hash() == m_root_path_hash);
-            entry->set_locale_root_path(entry->get_hash() == m_locale_root_path_hash);
+            entry->set_root_path(entry->get_hash() == root_path_hash);
+            entry->set_locale_root_path(entry->get_hash() == locale_root_path_hash);
 
             emplace_back(entry);
         }
@@ -226,9 +221,9 @@ namespace SCS
 
     void SCSFile::populateDirectory(Entry *entry)
     {
-        if(entry->get_hash() == m_root_path_hash)
+        if(entry->get_hash() == SCSFile::root_path_hash)
             entry->set_path("");
-        else if(entry->get_hash() == m_locale_root_path_hash)
+        else if(entry->get_hash() == SCSFile::locale_root_path_hash)
             entry->set_path("locale");
 
         bool is_recursive;

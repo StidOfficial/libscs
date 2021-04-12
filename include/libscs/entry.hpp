@@ -4,8 +4,6 @@
 #include <string>
 #include <vector>
 
-#define ROOT_HASH 0x9AE16A3B2F90404F
-
 namespace SCS
 {
     enum EntryType
