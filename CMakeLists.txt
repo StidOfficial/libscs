@@ -17,9 +17,13 @@ target_include_directories(scs PUBLIC include PRIVATE include/libscs)
 
 add_executable(scsinfo tools/scsinfo/src/scsinfo.cpp)
 
+add_executable(scs_extractor tools/scs_extractor/src/scs_extractor.cpp)
+
 target_link_libraries(scs stdc++fs z cityhash)
 
 target_link_libraries(scsinfo stdc++fs z cityhash scs)
+
+target_link_libraries(scs_extractor stdc++fs z cityhash scs)
 
 install(TARGETS scs LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 install(DIRECTORY include/libscs DESTINATION include)

@@ -132,12 +132,12 @@ namespace SCS
         return m_locale_root_path;
     }
 
-    void Entry::set_path(std::string path)
+    void Entry::set_path(std::filesystem::path path)
     {
         m_path = path;
     }
 
-    std::string Entry::get_path()
+    std::filesystem::path Entry::get_path()
     {
         return m_path;
     }

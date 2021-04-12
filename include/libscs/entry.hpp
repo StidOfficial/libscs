@@ -3,6 +3,16 @@
 #include <cinttypes>
 #include <string>
 #include <vector>
+#if __has_include(<filesystem>)
+#include <filesystem>
+#elif __has_include(<experimental/filesystem>)
+#include <experimental/filesystem>
+namespace std {
+	namespace filesystem = std::experimental::filesystem;
+}
+#else
+#error "No filesystem header found !"
+#endif
 
 namespace SCS
 {
@@ -70,8 +80,8 @@ namespace SCS
         bool is_root_path();
         void set_locale_root_path(bool locale_root_path);
         bool is_locale_root_path();
-        void set_path(std::string path);
-        std::string get_path();
+        void set_path(std::filesystem::path path);
+        std::filesystem::path get_path();
     private:
         uint64_t m_hash;
         uint64_t m_offset;
@@ -82,6 +92,6 @@ namespace SCS
         std::vector<std::string> m_names;
         bool m_root_path;
         bool m_locale_root_path;
-        std::string m_path;
+        std::filesystem::path m_path;
     };
 }

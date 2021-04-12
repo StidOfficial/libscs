@@ -228,15 +228,15 @@ namespace SCS
 
         bool is_recursive;
         std::string entry_name;
-        std::string path;
+        std::filesystem::path path;
         uint64_t hash;
         Entry *next;
         for(auto name : entry->get_names())
         {
             is_recursive = name[0] == '*';
-            entry_name = (is_recursive) ? name.substr(1) : name;
-            path = (!entry->get_path().empty()) ? entry->get_path() + "/" + entry_name : entry_name;
-            hash = CityHash64(path.c_str(), path.length());
+            entry_name = is_recursive ? name.substr(1) : name;
+            path = !entry->get_path().empty() ? entry->get_path() / entry_name : std::filesystem::path(entry_name);
+            hash = CityHash64(path.string().c_str(), path.string().size());
 
             next = find(path);
             if(next == nullptr)
