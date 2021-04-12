@@ -27,6 +27,17 @@ namespace SCS
         CityHash = 0x59544943 // CITY
     };
 
+    inline std::string to_string(HashMethod hash_method)
+    {
+        switch(hash_method)
+        {
+            case CityHash:
+                return "CityHash";
+            default:
+                return "Unknown (" + std::to_string(hash_method) + ")";
+        }
+    }
+
     class SCSFile : public std::vector<std::shared_ptr<Entry>>
     {
     public:
@@ -34,6 +45,8 @@ namespace SCS
         SCSFile();
         ~SCSFile();
 
+        void set_hash_method(HashMethod hash_method);
+        HashMethod get_hash_method();
         Entry *find(uint64_t hash);
         Entry *find(std::string path);
         Entry *get_root();

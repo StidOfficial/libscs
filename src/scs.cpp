@@ -93,6 +93,16 @@ namespace SCS
         entry->set_compressed_size(compressed_size);
     }
 
+    void SCSFile::set_hash_method(HashMethod hash_method)
+    {
+        m_hash_method = hash_method;
+    }
+
+    HashMethod SCSFile::get_hash_method()
+    {
+        return static_cast<HashMethod>(m_hash_method);
+    }
+
     Entry *SCSFile::find(uint64_t hash)
     {
         for(auto &entry : *this)

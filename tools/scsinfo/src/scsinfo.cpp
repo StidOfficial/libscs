@@ -33,6 +33,7 @@ int main(int argc, char **argv)
     try
     {
         scs_file.unpack();
+        std::cout << "Hash method: " << SCS::to_string(scs_file.get_hash_method()) << std::endl;
         std::cout << scs_file.size() << " entries" << std::endl;
 
         SCS::Entry *root = scs_file.get_root();
