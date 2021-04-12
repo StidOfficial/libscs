@@ -56,6 +56,10 @@ int main(int argc, char **argv)
                 for(auto name : entry->get_names())
                     std::cout << "- " << name << std::endl;
             }
+            else if(entry->is_file())
+            {
+                std::cout << "Path: " << entry->get_path() << std::endl;
+            }
 
             std::cout << std::endl;
         }

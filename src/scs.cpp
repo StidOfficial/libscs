@@ -243,8 +243,6 @@ namespace SCS
             path = (!entry->get_path().empty()) ? entry->get_path() + "/" + entry_name : entry_name;
             hash = CityHash64(path.c_str(), path.length());
 
-            std::cout << "Debug: " << path << " - " << hash << std::endl;
-
             next = find(path);
             if(next == nullptr)
             {
@@ -253,8 +251,6 @@ namespace SCS
             }
 
             next->set_path(path);
-
-            std::cout << "Path: " << path << std::endl;
 
             if(is_recursive)
                 populateDirectory(next);
