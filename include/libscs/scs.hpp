@@ -19,10 +19,14 @@ namespace std {
 
 #define MAGIC       0x23534353 // SCS#
 #define VERSION     0x0001
-#define HASH_METHOD 0x59544943 // CITY
 
 namespace SCS
 {
+    enum HashMethod
+    {
+        CityHash = 0x59544943 // CITY
+    };
+
     class SCSFile : public std::vector<std::shared_ptr<Entry>>
     {
     public:

@@ -141,7 +141,7 @@ namespace SCS
 
         read(m_hash_method);
 
-        if(m_hash_method != HASH_METHOD)
+        if(m_hash_method != HashMethod::CityHash)
             throw std::logic_error("Invalid hash method");
 
         read(m_num_entries);
