@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <libscs/scs.hpp>
+#include <zlib.h>
 
 void usage();
 
@@ -28,9 +29,40 @@ int main(int argc, char **argv)
                     std::filesystem::create_directories(output_path / entry->get_path());
                 else if(entry->is_file())
                 {
-                    std::ofstream file(entry->get_path(), std::ios_base::binary);
+                    
+                    std::ifstream input(file_path, std::ios::binary);
+                    std::ofstream output(output_path / entry->get_path(), std::ios_base::binary);
 
-                    file.close();
+                    input.seekg(entry->get_offset());
+
+                    if(entry->is_compressed())
+                    {
+                        std::vector<char> compressed_buffer(entry->get_compressed_size());
+                        input.read(compressed_buffer.data(), compressed_buffer.size());
+
+                        std::vector<char> buffer(entry->get_size());
+                        uLongf buffer_size = buffer.size();
+                        int result = uncompress(reinterpret_cast<Bytef*>(buffer.data()), &buffer_size, reinterpret_cast<Bytef*>(compressed_buffer.data()), compressed_buffer.size());
+                        if(Z_OK != result)
+                        {
+                            std::cerr << "*** ERROR *** : Failed to uncompress for " << entry->get_path() << std::endl;
+
+                            output.close();
+                            input.close();
+                            break;
+                        }
+
+                        output.write(buffer.data(), buffer.size());
+                    }
+                    else
+                    {
+                        std::vector<char> buffer(entry->get_size());
+                        input.read(buffer.data(), buffer.size());
+                        output.write(buffer.data(), buffer.size());
+                    }
+
+                    output.close();
+                    input.close();
                 }
         }
         catch(std::exception)
