@@ -154,8 +154,6 @@ namespace SCS
 
         m_file.seekg(m_start_offset, m_file.beg);
 
-        char* compressBuffer;
-        Bytef* buffer;
         uLongf buffer_size;
 
         Entry *entry = nullptr;
@@ -171,20 +169,17 @@ namespace SCS
                 std::string names(entry->get_size(), '\0');
                 if(entry->is_compressed())
                 {
-                    compressBuffer = new char[entry->get_compressed_size()];
-                    m_file.read(compressBuffer, entry->get_compressed_size());
+                    std::vector<char> compress_buffer(entry->get_compressed_size());
+                    m_file.read(compress_buffer.data(), entry->get_compressed_size());
 
-                    buffer = new Bytef[entry->get_size()];
-                    uLongf buffer_size = entry->get_size();
-                    uncompress(buffer, &buffer_size, (unsigned char*)compressBuffer, entry->get_compressed_size());
+                    std::vector<char> buffer(entry->get_size());
+                    buffer_size = buffer.size();
+                    uncompress(reinterpret_cast<unsigned char*>(buffer.data()), &buffer_size, reinterpret_cast<unsigned char*>(compress_buffer.data()), entry->get_compressed_size());
 
-                    names.assign(reinterpret_cast<char*>(buffer), entry->get_size());
-
-                    delete compressBuffer;
-                    delete buffer;
+                    names.assign(buffer.data(), buffer.size());
                 }
                 else
-                    m_file.read(&names[0], entry->get_size());
+                    m_file.read(&names[0], names.length());
 
                 m_file.seekg(old_pos, m_file.beg);
 
