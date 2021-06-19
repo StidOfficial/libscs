@@ -1,0 +1,9 @@
+SiiNunit
+{
+    /* Definition of some unit.
+    *
+    * Author: You */
+    some_unit : .my_mod.unit
+    {
+    }
+}

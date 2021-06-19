@@ -1,0 +1,9 @@
+SiiNunit
+{
+example: doing.includes
+{
+    foo: "bar"
+    over: 9000
+@include "some_file_to_include.sui"
+}
+}

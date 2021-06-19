@@ -1,0 +1,8 @@
+SiiNunit
+{
+    some_unit : .my_mod.unit // Some unit
+    {
+        # This value should be tweaked after users feedback
+        some_value: 45.875
+    }
+}

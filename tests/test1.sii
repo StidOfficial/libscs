@@ -1,0 +1,16 @@
+SiiNunit
+{
+    /* Definition of some unit.
+     *
+     * Author: You */
+    some_unit : .my_mod.unit // Some unit
+    {
+        # This value should be tweaked after users feedback
+        attribute_number: 40
+        attribute_string: "TEST STRING"
+        attribute_unit: test.unit
+        attribute_float3: (1.0, 1.0, 1.0)
+        attribute_float_number_ieee754: &40490f5a
+        some_value: 45.875
+    }
+}

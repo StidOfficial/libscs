@@ -8,22 +8,32 @@ set(LIBRARY_OUTPUT_PATH bin/)
 set(LIBPBO_SRCS
     src/entry.cpp
 	src/scs.cpp
+    src/sii.cpp
 )
 
+include(CTest)
+enable_testing()
+
 include_directories(include/)
+
 add_library(scs SHARED ${LIBPBO_SRCS})
-
 target_include_directories(scs PUBLIC include PRIVATE include/libscs)
-
-add_executable(scsinfo tools/scsinfo/src/scsinfo.cpp)
-
-add_executable(scs_extractor tools/scs_extractor/src/scs_extractor.cpp)
-
 target_link_libraries(scs stdc++fs z cityhash)
 
+add_executable(scsinfo tools/scsinfo/src/scsinfo.cpp)
 target_link_libraries(scsinfo stdc++fs z cityhash scs)
 
+add_executable(scs_extractor tools/scs_extractor/src/scs_extractor.cpp)
 target_link_libraries(scs_extractor stdc++fs z cityhash scs)
+
+add_executable(parsing_test tests/parsing.cpp)
+target_link_libraries(parsing_test stdc++fs scs)
+
+add_test(parsing bin/parsing_test ../tests)
+
+set(CPACK_PROJECT_NAME ${PROJECT_NAME})
+set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+include(CPack)
 
 install(TARGETS scs LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 install(DIRECTORY include/libscs DESTINATION include)
