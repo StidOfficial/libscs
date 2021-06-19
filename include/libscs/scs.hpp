@@ -48,6 +48,16 @@ namespace SCS
         uint32_t start_offset;
     };
 
+    struct scs_entry_t
+    {
+        uint64_t hash;
+        uint64_t offset;
+        uint32_t type;
+        uint32_t crc;
+        uint32_t size;
+        uint32_t compressed_size;
+    };
+
     class SCSFile : public std::vector<std::shared_ptr<Entry>>
     {
     public:
@@ -81,6 +91,7 @@ namespace SCS
         void read(int32_t &value);
         void read(int64_t &value);
         void read(scs_header_t &value);
+        void read(scs_entry_t &value);
         void read(Entry* &entry);
         void read(std::string &text);
         void read(char *data, std::streamsize size);

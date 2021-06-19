@@ -57,6 +57,11 @@ namespace SCS
         read(reinterpret_cast<char*>(&value), sizeof(value));
     }
 
+    void SCSFile::read(scs_entry_t &value)
+    {
+        read(reinterpret_cast<char*>(&value), sizeof(value));
+    }
+
     void SCSFile::read(std::string &text)
     {
         std::getline(m_file, text, '\0');
@@ -69,28 +74,17 @@ namespace SCS
 
     void SCSFile::read(Entry* &entry)
     {
-        uint64_t hash;
-        uint64_t offset;
-        uint32_t type;
-        uint32_t crc;
-        uint32_t size;
-        uint32_t compressed_size;
-
-        read(hash);
-        read(offset);
-        read(type);
-        read(crc);
-        read(size);
-        read(compressed_size);
+        scs_entry_t file_entry;
+        read(file_entry);
 
         entry = new Entry();
 
-        entry->set_hash(hash);
-        entry->set_offset(offset);
-        entry->set_type(static_cast<EntryType>(type));
-        entry->set_crc(crc);
-        entry->set_size(size);
-        entry->set_compressed_size(compressed_size);
+        entry->set_hash(file_entry.hash);
+        entry->set_offset(file_entry.offset);
+        entry->set_type(static_cast<EntryType>(file_entry.type));
+        entry->set_crc(file_entry.crc);
+        entry->set_size(file_entry.size);
+        entry->set_compressed_size(file_entry.compressed_size);
     }
 
     void SCSFile::set_hash_method(HashMethod hash_method)
