@@ -38,6 +38,16 @@ namespace SCS
         }
     }
 
+    struct scs_header_t
+    {
+        uint32_t magic;
+        uint16_t version;
+        uint16_t salt;
+        uint32_t hash_method;
+        uint32_t num_entries;
+        uint32_t start_offset;
+    };
+
     class SCSFile : public std::vector<std::shared_ptr<Entry>>
     {
     public:
@@ -62,12 +72,7 @@ namespace SCS
     private:
         std::filesystem::path m_path;
         std::fstream m_file;
-
-        uint16_t m_version;
-        uint16_t m_salt;
-        uint32_t m_hash_method;
-        uint32_t m_num_entries;
-        uint32_t m_start_offset;
+        scs_header_t m_header;
 
         void open(std::filesystem::path file_path);
         void read(uint16_t &value);
@@ -75,6 +80,7 @@ namespace SCS
         void read(uint64_t &value);
         void read(int32_t &value);
         void read(int64_t &value);
+        void read(scs_header_t &value);
         void read(Entry* &entry);
         void read(std::string &text);
         void read(char *data, std::streamsize size);

@@ -52,6 +52,11 @@ namespace SCS
         read(reinterpret_cast<char*>(&value), sizeof(value));
     }
 
+    void SCSFile::read(scs_header_t &value)
+    {
+        read(reinterpret_cast<char*>(&value), sizeof(value));
+    }
+
     void SCSFile::read(std::string &text)
     {
         std::getline(m_file, text, '\0');
@@ -90,12 +95,12 @@ namespace SCS
 
     void SCSFile::set_hash_method(HashMethod hash_method)
     {
-        m_hash_method = hash_method;
+        m_header.hash_method = hash_method;
     }
 
     HashMethod SCSFile::get_hash_method()
     {
-        return static_cast<HashMethod>(m_hash_method);
+        return static_cast<HashMethod>(m_header.hash_method);
     }
 
     Entry *SCSFile::find(uint64_t hash)
@@ -128,36 +133,26 @@ namespace SCS
 		if(!m_file.is_open())
 			throw std::logic_error(std::strerror(errno));
 
-        uint32_t magic;
-        read(magic);
+        read(m_header);
 
-        if(magic != MAGIC)
+        if(m_header.magic != MAGIC)
             throw std::logic_error("Invalid magic code");
 
-        read(m_version);
-
-        if(m_version != VERSION)
+        if(m_header.version != VERSION)
             throw std::logic_error("Invalid version");
 
-        read(m_salt);
-
-        if(m_salt != 0x0000)
+        if(m_header.salt != 0x0000)
             throw std::logic_error("Invalid salt");
 
-        read(m_hash_method);
-
-        if(m_hash_method != HashMethod::CityHash)
+        if(m_header.hash_method != HashMethod::CityHash)
             throw std::logic_error("Invalid hash method");
 
-        read(m_num_entries);
-        read(m_start_offset);
-
-        m_file.seekg(m_start_offset, m_file.beg);
+        m_file.seekg(m_header.start_offset, m_file.beg);
 
         uLongf buffer_size;
 
         Entry *entry = nullptr;
-        for(uint32_t i = 0; i < m_num_entries; i++)
+        for(uint32_t i = 0; i < m_header.num_entries; i++)
         {
             read(entry);
 
