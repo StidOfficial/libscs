@@ -16,6 +16,7 @@ namespace std {
 #include <city.h>
 
 #include "entry.hpp"
+#include "stream.hpp"
 
 #define MAGIC       0x23534353 // SCS#
 #define VERSION     0x0001
@@ -48,7 +49,7 @@ namespace SCS
         uint32_t start_offset;
     };
 
-    class SCSFile : public std::vector<std::shared_ptr<Entry>>
+    class SCSFile : public Stream, public std::vector<std::shared_ptr<Entry>>
     {
     public:
         static inline std::string locale_root_path = "locale";
@@ -58,7 +59,7 @@ namespace SCS
 
         SCSFile(std::filesystem::path file_path);
         SCSFile();
-        ~SCSFile();
+        virtual ~SCSFile();
 
         std::string path();
         void set_hash_method(HashMethod hash_method);
@@ -71,20 +72,10 @@ namespace SCS
         void unpack();
         void pack();
     private:
-        std::filesystem::path m_path;
-        std::fstream m_file;
         scs_header_t m_header;
 
-        void open(std::filesystem::path file_path);
-        void read(uint16_t &value);
-        void read(uint32_t &value);
-        void read(uint64_t &value);
-        void read(int32_t &value);
-        void read(int64_t &value);
         void read(scs_header_t &value);
         void read(scs_entry_t &value);
         void read(Entry* &entry);
-        void read(std::string &text);
-        void read(char *data, std::streamsize size);
     };
 }

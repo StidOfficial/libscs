@@ -9,6 +9,7 @@ set(LIBPBO_SRCS
     src/entry.cpp
 	src/scs.cpp
     src/sii.cpp
+    src/stream.cpp
 )
 
 include(CTest)
@@ -25,6 +26,9 @@ target_link_libraries(scsinfo stdc++fs z cityhash scs)
 
 add_executable(scs_extractor tools/scs_extractor/src/scs_extractor.cpp)
 target_link_libraries(scs_extractor stdc++fs z cityhash scs)
+
+add_executable(viewer tools/viewer/src/main.cpp tools/viewer/src/ViewerWindow.cpp tools/viewer/src/MapDrawingArea.cpp)
+target_link_libraries(viewer stdc++fs z cityhash scs ${GTKMM_LIBRARIES})
 
 add_executable(parsing_test tests/parsing.cpp)
 target_link_libraries(parsing_test stdc++fs scs)

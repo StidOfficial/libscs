@@ -15,62 +15,19 @@ namespace SCS
     }
 
     SCSFile::SCSFile()
-        : std::vector<std::shared_ptr<Entry>>(), m_file()
+        : Stream(), std::vector<std::shared_ptr<Entry>>()
     {
-    }
-
-    void SCSFile::open(std::filesystem::path file_path)
-    {
-        if(std::filesystem::is_directory(m_path))
-			throw std::logic_error(std::strerror(EISDIR));
-
-        m_path = file_path;
-    }
-
-    void SCSFile::read(uint16_t &value)
-	{
-		read(reinterpret_cast<char*>(&value), sizeof(value));
-	}
-
-    void SCSFile::read(uint32_t &value)
-	{
-		read(reinterpret_cast<char*>(&value), sizeof(value));
-	}
-
-    void SCSFile::read(uint64_t &value)
-    {
-        read(reinterpret_cast<char*>(&value), sizeof(value));
-    }
-
-    void SCSFile::read(int32_t &value)
-    {
-        read(reinterpret_cast<char*>(&value), sizeof(value));
-    }
-
-    void SCSFile::read(int64_t &value)
-    {
-        read(reinterpret_cast<char*>(&value), sizeof(value));
     }
 
     void SCSFile::read(scs_header_t &value)
     {
-        read(reinterpret_cast<char*>(&value), sizeof(value));
+        Stream::read(reinterpret_cast<char*>(&value), sizeof(value));
     }
 
     void SCSFile::read(scs_entry_t &value)
     {
-        read(reinterpret_cast<char*>(&value), sizeof(value));
+        Stream::read(reinterpret_cast<char*>(&value), sizeof(value));
     }
-
-    void SCSFile::read(std::string &text)
-    {
-        std::getline(m_file, text, '\0');
-    }
-
-    void SCSFile::read(char *data, std::streamsize size)
-	{
-		m_file.read(data, size);
-	}
 
     void SCSFile::read(Entry* &entry)
     {
@@ -188,6 +145,5 @@ namespace SCS
 
     SCSFile::~SCSFile()
     {
-        m_file.close();
     }
 }
