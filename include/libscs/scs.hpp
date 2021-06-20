@@ -48,16 +48,6 @@ namespace SCS
         uint32_t start_offset;
     };
 
-    struct scs_entry_t
-    {
-        uint64_t hash;
-        uint64_t offset;
-        uint32_t type;
-        uint32_t crc;
-        uint32_t size;
-        uint32_t compressed_size;
-    };
-
     class SCSFile : public std::vector<std::shared_ptr<Entry>>
     {
     public:
@@ -70,12 +60,13 @@ namespace SCS
         SCSFile();
         ~SCSFile();
 
+        std::string path();
         void set_hash_method(HashMethod hash_method);
         HashMethod get_hash_method();
         Entry *find(uint64_t hash);
         Entry *find(std::string path);
         Entry *get_root();
-        Entry *get_locale_root();
+        Entry *get_locale();
 
         void unpack();
         void pack();

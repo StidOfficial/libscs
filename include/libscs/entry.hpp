@@ -16,6 +16,16 @@ namespace std {
 
 namespace SCS
 {
+    struct scs_entry_t
+    {
+        uint64_t hash;
+        uint64_t offset;
+        uint32_t type;
+        uint32_t crc;
+        uint32_t size;
+        uint32_t compressed_size;
+    };
+
     enum EntryType
     {
         UncompressedFile,
@@ -57,6 +67,7 @@ namespace SCS
     {
     public:
         Entry();
+        Entry(scs_entry_t entry);
         ~Entry();
 
         void set_hash(uint64_t hash);
@@ -76,22 +87,8 @@ namespace SCS
         bool is_directory();
         bool is_compressed();
         bool is_root_directory();
-        void set_root_path(bool root_path);
-        bool is_root_path();
-        void set_locale_root_path(bool locale_root_path);
-        bool is_locale_root_path();
-        void set_path(std::filesystem::path path);
-        std::filesystem::path get_path();
     private:
-        uint64_t m_hash;
-        uint64_t m_offset;
-        EntryType m_type;
-        uint32_t m_crc;
-        uint32_t m_size;
-        uint32_t m_compressed_size;
+        scs_entry_t m_entry;
         std::vector<std::string> m_names;
-        bool m_root_path;
-        bool m_locale_root_path;
-        std::filesystem::path m_path;
     };
 }

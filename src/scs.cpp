@@ -77,14 +77,12 @@ namespace SCS
         scs_entry_t file_entry;
         read(file_entry);
 
-        entry = new Entry();
+        entry = new Entry(file_entry);
+    }
 
-        entry->set_hash(file_entry.hash);
-        entry->set_offset(file_entry.offset);
-        entry->set_type(static_cast<EntryType>(file_entry.type));
-        entry->set_crc(file_entry.crc);
-        entry->set_size(file_entry.size);
-        entry->set_compressed_size(file_entry.compressed_size);
+    std::string SCSFile::path()
+    {
+        return m_path;
     }
 
     void SCSFile::set_hash_method(HashMethod hash_method)
@@ -113,12 +111,12 @@ namespace SCS
 
     Entry *SCSFile::get_root()
     {
-        return find(root_path_hash);
+        return find(root_path);
     }
 
-    Entry *SCSFile::get_locale_root()
+    Entry * SCSFile::get_locale()
     {
-        return find(locale_root_path_hash);
+        return find(locale_root_path);
     }
 
     void SCSFile::unpack()
@@ -179,61 +177,13 @@ namespace SCS
                     entry->get_names().emplace_back(name);
             }
 
-            entry->set_root_path(entry->get_hash() == root_path_hash);
-            entry->set_locale_root_path(entry->get_hash() == locale_root_path_hash);
-
             emplace_back(entry);
         }
-
-        Entry *root = get_root();
-        if(root == nullptr)
-            root = get_locale_root();
-
-        if(root == nullptr)
-        {
-            std::cerr << "[WARNING] No root entry found!" << std::endl;
-            return;
-        }
-
-        populateDirectory(root);
     }
 
     void SCSFile::pack()
     {
 
-    }
-
-    void SCSFile::populateDirectory(Entry *entry)
-    {
-        if(entry->get_hash() == SCSFile::root_path_hash)
-            entry->set_path("");
-        else if(entry->get_hash() == SCSFile::locale_root_path_hash)
-            entry->set_path("locale");
-
-        bool is_recursive;
-        std::string entry_name;
-        std::filesystem::path path;
-        uint64_t hash;
-        Entry *next;
-        for(auto name : entry->get_names())
-        {
-            is_recursive = name[0] == '*';
-            entry_name = is_recursive ? name.substr(1) : name;
-            path = !entry->get_path().empty() ? entry->get_path() / entry_name : std::filesystem::path(entry_name);
-            hash = CityHash64(path.string().c_str(), path.string().size());
-
-            next = find(path);
-            if(next == nullptr)
-            {
-                std::cerr << "No entry found for " << path << " : " << hash  << " - " << is_recursive << std::endl;
-                continue;
-            }
-
-            next->set_path(path);
-
-            if(is_recursive)
-                populateDirectory(next);
-        }
     }
 
     SCSFile::~SCSFile()
