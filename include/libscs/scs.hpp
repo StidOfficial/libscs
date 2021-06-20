@@ -86,7 +86,5 @@ namespace SCS
         void read(Entry* &entry);
         void read(std::string &text);
         void read(char *data, std::streamsize size);
-
-        void populateDirectory(Entry *entry);
     };
 }
