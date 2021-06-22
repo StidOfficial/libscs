@@ -5,10 +5,10 @@
 
 namespace SCS
 {
-    Stream::Stream(std::filesystem::path file_path)
+    Stream::Stream(std::filesystem::path path)
         : Stream()
     {
-        open(file_path);
+        open(path);
     }
 
     Stream::Stream()

@@ -19,65 +19,10 @@ namespace SCS
     {
     }
 
-    void SCSFile::read(scs_header_t &value)
+    void SCSFile::open(std::filesystem::path path)
     {
-        Stream::read(reinterpret_cast<char*>(&value), sizeof(value));
-    }
+        Stream::open(path);
 
-    void SCSFile::read(scs_entry_t &value)
-    {
-        Stream::read(reinterpret_cast<char*>(&value), sizeof(value));
-    }
-
-    void SCSFile::read(Entry* &entry)
-    {
-        scs_entry_t file_entry;
-        read(file_entry);
-
-        entry = new Entry(file_entry);
-    }
-
-    std::string SCSFile::path()
-    {
-        return m_path;
-    }
-
-    void SCSFile::set_hash_method(HashMethod hash_method)
-    {
-        m_header.hash_method = hash_method;
-    }
-
-    HashMethod SCSFile::get_hash_method()
-    {
-        return static_cast<HashMethod>(m_header.hash_method);
-    }
-
-    Entry *SCSFile::find(uint64_t hash)
-    {
-        for(auto &entry : *this)
-            if(entry->get_hash() == hash)
-                return entry.get();
-
-        return nullptr;
-    }
-
-    Entry *SCSFile::find(std::string path)
-    {
-        return find(CityHash64(path.c_str(), path.size()));
-    }
-
-    Entry *SCSFile::get_root()
-    {
-        return find(root_path);
-    }
-
-    Entry * SCSFile::get_locale()
-    {
-        return find(locale_root_path);
-    }
-
-    void SCSFile::unpack()
-    {
         read(m_header);
 
         if(m_header.magic != MAGIC)
@@ -134,9 +79,61 @@ namespace SCS
         }
     }
 
-    void SCSFile::pack()
+    void SCSFile::read(scs_header_t &value)
     {
+        Stream::read(reinterpret_cast<char*>(&value), sizeof(value));
+    }
 
+    void SCSFile::read(scs_entry_t &value)
+    {
+        Stream::read(reinterpret_cast<char*>(&value), sizeof(value));
+    }
+
+    void SCSFile::read(Entry* &entry)
+    {
+        scs_entry_t file_entry;
+        read(file_entry);
+
+        entry = new Entry(file_entry);
+    }
+
+    std::string SCSFile::path()
+    {
+        return m_path;
+    }
+
+    void SCSFile::set_hash_method(HashMethod hash_method)
+    {
+        m_header.hash_method = hash_method;
+    }
+
+    HashMethod SCSFile::get_hash_method()
+    {
+        return static_cast<HashMethod>(m_header.hash_method);
+    }
+
+    Entry *SCSFile::find(uint64_t hash)
+    {
+        for(auto &entry : *this)
+            if(entry->get_hash() == hash)
+                return entry.get();
+
+        return nullptr;
+    }
+
+    Entry *SCSFile::find(std::string path)
+    {
+        return find(CityHash64(path.c_str(), path.size()));
+    }
+
+    Entry *SCSFile::get_root()
+    {
+        return find(root_path);
+    }
+
+    Entry * SCSFile::get_locale()
+    {
+        return find(locale_root_path);
     }
 
     SCSFile::~SCSFile()

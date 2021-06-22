@@ -16,10 +16,10 @@ int main(int argc, char **argv)
         file_path = argv[1];
         output_path = argv[2];
 
-        SCS::SCSFile scs_file(file_path);
         try
         {
-            scs_file.unpack();
+            SCS::SCSFile scs_file(file_path);
+
             std::cout << "[hashfs] " << file_path.filename().string() << ": Mounted ok, " << scs_file.size() << " entries"  << std::endl;
 
             std::string root_path = "";

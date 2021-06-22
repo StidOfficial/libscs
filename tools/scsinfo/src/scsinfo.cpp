@@ -30,10 +30,10 @@ int main(int argc, char **argv)
 		return EXIT_SUCCESS;
 	}
 
-    SCS::SCSFile scs_file(file_path);
     try
     {
-        scs_file.unpack();
+        SCS::SCSFile scs_file(file_path);
+
         std::cout << "Hash method: " << SCS::to_string(scs_file.get_hash_method()) << std::endl;
         std::cout << scs_file.size() << " entries" << std::endl;
 

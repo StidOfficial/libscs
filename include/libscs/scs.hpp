@@ -61,6 +61,7 @@ namespace SCS
         SCSFile();
         virtual ~SCSFile();
 
+        virtual void open(std::filesystem::path path);
         std::string path();
         void set_hash_method(HashMethod hash_method);
         HashMethod get_hash_method();
@@ -68,9 +69,6 @@ namespace SCS
         Entry *find(std::string path);
         Entry *get_root();
         Entry *get_locale();
-
-        void unpack();
-        void pack();
     private:
         scs_header_t m_header;
 

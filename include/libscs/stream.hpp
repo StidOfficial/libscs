@@ -8,7 +8,7 @@ namespace SCS
     class Stream
     {
     public:
-        Stream(std::filesystem::path file_path);
+        Stream(std::filesystem::path path);
         Stream();
         virtual ~Stream();
 
