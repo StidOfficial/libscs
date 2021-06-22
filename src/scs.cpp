@@ -78,10 +78,6 @@ namespace SCS
 
     void SCSFile::unpack()
     {
-        m_file.open(m_path, std::fstream::in | std::fstream::binary);
-		if(!m_file.is_open())
-			throw std::logic_error(std::strerror(errno));
-
         read(m_header);
 
         if(m_header.magic != MAGIC)

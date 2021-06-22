@@ -21,6 +21,10 @@ namespace SCS
 			throw std::logic_error(std::strerror(EISDIR));
 
         m_path = path;
+
+        m_file.open(m_path, std::fstream::in | std::fstream::binary);
+		if(!m_file.is_open())
+			throw std::logic_error(std::strerror(errno));
     }
 
     void Stream::close()
