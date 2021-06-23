@@ -8,7 +8,6 @@ void usage();
 int main(int argc, char **argv)
 {
     std::string file_path;
-	bool signed_file = true;
 
 	for(int i = 1; i < argc; i++)
 	{
@@ -19,7 +18,7 @@ int main(int argc, char **argv)
 			return EXIT_SUCCESS;
 		}
 		else if(arg.find("-", 0, 2) != std::string::npos)
-			std::cerr << "pboinfo: invalid option « " << arg << " »" << std::endl;
+			std::cerr << "scsinfo: invalid option « " << arg << " »" << std::endl;
 		else
 			file_path = arg;
 	}
