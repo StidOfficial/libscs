@@ -23,7 +23,7 @@ namespace SCS
     {
         Stream::open(path);
 
-        read(m_header);
+        Stream::read(m_header);
 
         if(m_header.magic != MAGIC)
             throw std::logic_error("Invalid magic code");
@@ -79,20 +79,10 @@ namespace SCS
         }
     }
 
-    void SCSFile::read(scs_header_t &value)
-    {
-        Stream::read(reinterpret_cast<char*>(&value), sizeof(value));
-    }
-
-    void SCSFile::read(scs_entry_t &value)
-    {
-        Stream::read(reinterpret_cast<char*>(&value), sizeof(value));
-    }
-
     void SCSFile::read(Entry* &entry)
     {
         scs_entry_t file_entry;
-        read(file_entry);
+        Stream::read(file_entry);
 
         entry = new Entry(file_entry);
     }

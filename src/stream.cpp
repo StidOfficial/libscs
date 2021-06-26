@@ -37,31 +37,6 @@ namespace SCS
         return m_path;
     }
 
-    void Stream::read(uint16_t &value)
-	{
-		read(reinterpret_cast<char*>(&value), sizeof(value));
-	}
-
-    void Stream::read(uint32_t &value)
-	{
-		read(reinterpret_cast<char*>(&value), sizeof(value));
-	}
-
-    void Stream::read(uint64_t &value)
-    {
-        read(reinterpret_cast<char*>(&value), sizeof(value));
-    }
-
-    void Stream::read(int32_t &value)
-    {
-        read(reinterpret_cast<char*>(&value), sizeof(value));
-    }
-
-    void Stream::read(int64_t &value)
-    {
-        read(reinterpret_cast<char*>(&value), sizeof(value));
-    }
-
     void Stream::read(std::string &text)
     {
         std::getline(m_file, text, '\0');

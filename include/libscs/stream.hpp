@@ -19,11 +19,11 @@ namespace SCS
         std::filesystem::path m_path;
         std::fstream m_file;
 
-        void read(uint16_t &value);
-        void read(uint32_t &value);
-        void read(uint64_t &value);
-        void read(int32_t &value);
-        void read(int64_t &value);
+        template<typename T>
+        void read(T &value)
+        {
+            read(reinterpret_cast<char*>(&value), sizeof(value));
+        }
         void read(std::string &text);
         void read(char *data, std::streamsize size);
     };

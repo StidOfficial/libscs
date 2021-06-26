@@ -72,8 +72,6 @@ namespace SCS
     private:
         scs_header_t m_header;
 
-        void read(scs_header_t &value);
-        void read(scs_entry_t &value);
         void read(Entry* &entry);
     };
 }
