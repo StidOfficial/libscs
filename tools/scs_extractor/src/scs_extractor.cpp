@@ -1,9 +1,10 @@
 #include <cstdlib>
 #include <iostream>
 #include <libscs/scs.hpp>
+#include <libscs/filesystem.hpp>
 #include <zlib.h>
 
-void extract(SCS::SCSFile& file, std::filesystem::path output_path, std::filesystem::path base_path, SCS::Entry* root_entry);
+void extract(SCS::Filesystem& filesystem, std::filesystem::path output_path, std::filesystem::path base_path);
 void usage();
 
 int main(int argc, char **argv)
@@ -16,31 +17,24 @@ int main(int argc, char **argv)
         file_path = argv[1];
         output_path = argv[2];
 
+        SCS::Filesystem filesystem;
         try
         {
-            SCS::SCSFile scs_file(file_path);
-
-            std::cout << "[hashfs] " << file_path.filename().string() << ": Mounted ok, " << scs_file.size() << " entries"  << std::endl;
-
-            std::string root_path = "";
-            SCS::Entry *root = scs_file.get_root();
-            if(root == nullptr)
-            {
-                root_path = "locale";
-                root = scs_file.get_locale();
-            }
-
-            if(root == nullptr)
-            {
-                std::cerr << "No root entry found !" << std::endl;
-                return EXIT_FAILURE;
-            }
-
-            extract(scs_file, output_path, root_path, root);
+            filesystem.load(file_path);
         }
         catch(std::exception)
         {
             std::cerr << "*** ERROR *** : Failed to mount the archive!" << std::endl;
+            return EXIT_FAILURE;
+        }
+
+        if(filesystem.exists(""))
+            extract(filesystem, output_path, "");
+        else if(filesystem.exists("locale"))
+            extract(filesystem, output_path, "locale");
+        else
+        {
+            std::cerr << "No root entry found !" << std::endl;
             return EXIT_FAILURE;
         }
 
@@ -53,28 +47,32 @@ int main(int argc, char **argv)
 	}
 }
 
-void extract(SCS::SCSFile& file, std::filesystem::path output_path, std::filesystem::path base_path, SCS::Entry* root_entry)
+void extract(SCS::Filesystem& filesystem, std::filesystem::path output_path, std::filesystem::path base_path)
 {
-    if(root_entry->is_directory())
+    auto entry = filesystem.get_entry(base_path);
+
+    if(SCS::Filesystem::is_directory(entry))
     {
-        bool is_recursive;
-        std::string entry_name;
-        std::filesystem::path path;
-        SCS::Entry* entry;
-
-        for(auto name : root_entry->get_names())
+        for(const auto& name : filesystem.get_directories(base_path))
         {
-            is_recursive = name[0] == '*';
-            entry_name = is_recursive ? name.substr(1) : name;
-            path = base_path.empty() ? std::filesystem::path(entry_name) : base_path / entry_name;
+            auto path = base_path.empty() ? std::filesystem::path(name) : base_path / name;
 
-            entry = file.find(path);
-            if(entry)
-                extract(file, output_path, path, entry);
-            else
-                std::cerr << "No entry found for " << path << std::endl;
+            extract(filesystem, output_path, path);
         }
 
+        for(const auto& name : filesystem.get_files(base_path))
+        {
+            auto path = base_path.empty() ? std::filesystem::path(name) : base_path / name;
+
+            extract(filesystem, output_path, path);
+        }
+
+        return;
+    }
+
+    if(!SCS::Filesystem::exists(entry))
+    {
+        std::cerr << "No entry found : " << base_path << std::endl;
         return;
     }
 
@@ -82,17 +80,17 @@ void extract(SCS::SCSFile& file, std::filesystem::path output_path, std::filesys
 
     std::filesystem::create_directories(output_file_path.parent_path());
 
-    std::ifstream input(file.path(), std::ios::binary);
+    auto root_entry = entry.value();
+
+    std::ifstream input = filesystem.get_file(root_entry);
     std::ofstream output(output_file_path, std::ios_base::binary);
-
-    input.seekg(root_entry->get_offset());
-
-    if(root_entry->is_compressed())
+    
+    if(root_entry.second->is_compressed())
     {
-        std::vector<char> compressed_buffer(root_entry->get_compressed_size());
+        std::vector<char> compressed_buffer(root_entry.second->get_compressed_size());
         input.read(compressed_buffer.data(), compressed_buffer.size());
 
-        std::vector<char> buffer(root_entry->get_size());
+        std::vector<char> buffer(root_entry.second->get_size());
         uLongf buffer_size = buffer.size();
         int result = uncompress(reinterpret_cast<Bytef*>(buffer.data()), &buffer_size, reinterpret_cast<Bytef*>(compressed_buffer.data()), compressed_buffer.size());
         if(Z_OK != result)
@@ -109,7 +107,7 @@ void extract(SCS::SCSFile& file, std::filesystem::path output_path, std::filesys
     }
     else
     {
-        std::vector<char> buffer(root_entry->get_size());
+        std::vector<char> buffer(root_entry.second->get_size());
         input.read(buffer.data(), buffer.size());
         output.write(buffer.data(), buffer.size());
     }

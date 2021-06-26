@@ -10,6 +10,7 @@ set(LIBPBO_SRCS
 	src/scs.cpp
     src/sii.cpp
     src/stream.cpp
+    src/filesystem.cpp
 )
 
 include(CTest)
