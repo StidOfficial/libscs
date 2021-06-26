@@ -121,7 +121,7 @@ namespace SCS
     std::ifstream Filesystem::get_file(std::filesystem::path path)
     {
         auto entry = get_entry(path);
-        if(entry.has_value())
+        if(!entry.has_value())
             throw std::logic_error(std::strerror(ENOENT));
 
         return get_file(entry.value());
